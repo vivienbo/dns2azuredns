@@ -128,5 +128,4 @@ This section provides a complete configuration example for a DNS zone named **co
 - **Azure Credentials Section**:  
   - Contains the required credentials for Azure authentication, including the tenant ID, service principal, and password.
 
-This example provides a complete configuration for a DNS setup using the **contoso.com** zone. Feel free to modify any values to fit your specific use case!
-
+*This README was mostly generated using AI and customized*
