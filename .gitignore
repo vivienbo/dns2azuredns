@@ -25,4 +25,8 @@ replay_pid*
 
 # Confidentiality
 conf/amd.json
+.vscode
+
+# Build files
 libs
+target
