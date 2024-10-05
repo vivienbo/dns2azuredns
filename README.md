@@ -1,8 +1,6 @@
 # dnsaxfr2azuredns
 `dnsaxfr2azuredns` is a reponse to [Azure DNS](https://learn.microsoft.com/en-us/azure/dns/dns-overview) lack of [AXFR/IXFR](https://learn.microsoft.com/en-us/azure/dns/dns-faq#does-azure-dns-support-zone-transfers--axfr-ixfr--) Zone transfer. This is a Java application that acts as a Slave DNS Server and synchronizes with Master DNS's, and then replicates modified data with Azure DNS.
 
-This project is still in development and not yet fit for production nor fully documented.
-
 # Disclaimer
 
 This project is not functional yet. Documentation currently represents the aim of the project.
@@ -97,10 +95,10 @@ For JSON configuration processing:
 # Todo List
 
 To get to the first version, we need:
-[ ] Configuration object
-[ ] Functional DNS Server to receive NOTIFY or send AXFR requests every (configurable) minutes
-[ ] DNS Caching for IXFR transfers
-[ ] Azure DNS Zone to dnsjava converter
-[ ] DNS Caching for Azure DNS
-[ ] Comparator between the DNS Caching and Azure DNS Zone
-[ ] Updater for the Azure DNS Zone
+* [ ] Configuration object
+* [ ] Functional DNS Server to receive NOTIFY or send AXFR requests every (configurable) minutes
+* [ ] DNS Caching for IXFR transfers
+* [ ] Azure DNS Zone to dnsjava converter
+* [ ] DNS Caching for Azure DNS
+* [ ] Comparator between the DNS Caching and Azure DNS Zone
+* [ ] Updater for the Azure DNS Zone
