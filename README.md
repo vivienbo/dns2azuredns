@@ -1,9 +1,21 @@
 # dnsaxfr2azuredns
-`dnsaxfr2azuredns` is a reponse to [Azure DNS](https://learn.microsoft.com/en-us/azure/dns/dns-overview) lack of [AXFR/IXFR](https://learn.microsoft.com/en-us/azure/dns/dns-overview) Zone transfer. This is a Java application that acts as a Slave DNS Server and synchronizes with Master DNS's, and then replicates modified data with Azure DNS.
+`dnsaxfr2azuredns` is a reponse to [Azure DNS](https://learn.microsoft.com/en-us/azure/dns/dns-overview) lack of [AXFR/IXFR](https://learn.microsoft.com/en-us/azure/dns/dns-faq#does-azure-dns-support-zone-transfers--axfr-ixfr--) Zone transfer. This is a Java application that acts as a Slave DNS Server and synchronizes with Master DNS's, and then replicates modified data with Azure DNS.
 
 This project is still in development and not yet fit for production nor fully documented.
 
+# Disclaimer
+
+This project is not functional yet. Documentation currently represents the aim of the project.
+
+Any available version for now stores passwords in cleartext in the JSON configuration, and in cleartext in memory. If this is a security concern for you, feel free to contribute to the project to add better security. Otherwise this will be addressed once functional.
+
 # How to use this project
+
+Intended use of this application is to allow transfer from a private DNS Zone hosted on any AXFR or IXFR compliant DNS Server (Windows Server DNS, bind, unbound...) to Azure DNS Zones.
+
+It *might* be used to leverage Azure DNS as secondary DNS Server however in that case, DNSSEC cannot be enabled.
+
+For now it was not design to allow 2-ways updates.
 
 ## Solution Design
 
@@ -58,14 +70,15 @@ sequenceDiagram
 
 ## Running the DNSSlaveServerApp
 
-`java -jar dnsaxfr2azuredns -`
+1. Create a configuration file based on the [example.json](conf/example.json). For more information check [Configuration Documentation](conf/README.md)
+2. Start the server using `java -jar dnsaxfr2azuredns.jar -c conf/settings.json`
 
 # Contributing details
 
 ## Java version and Build tools
 
 * Building the JAR application requires Maven 2.7+.
-* Code is designed for Java SE 21.
+* Code is designed for Java SE 21 (may look into lower versions if functional).
 
 ## Project Dependencies
 
@@ -77,5 +90,17 @@ For `DNSSlaveServerApp` command line arguments:
 * [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/)
 
 For JSON configuration processing:
-* [json-schema-validator](https://github.com/networknt/json-schema-validator)
+* [dev.harrel's json-schema](https://github.com/harrel56/json-schema)
 * [Google GSON](https://github.com/google/gson)
+* [Apache Commons Validator](https://commons.apache.org/proper/commons-validator/)
+
+# Todo List
+
+To get to the first version, we need:
+[ ] Configuration object
+[ ] Functional DNS Server to receive NOTIFY or send AXFR requests every (configurable) minutes
+[ ] DNS Caching for IXFR transfers
+[ ] Azure DNS Zone to dnsjava converter
+[ ] DNS Caching for Azure DNS
+[ ] Comparator between the DNS Caching and Azure DNS Zone
+[ ] Updater for the Azure DNS Zone
