@@ -24,11 +24,14 @@ The `zones` section defines an array of DNS zone configurations. Each zone confi
 - **zone_name** (string, required):  
   The name of the DNS zone. This field is mandatory.
 
+- **master** (string, required):
+  Specifies the type of synchronization based on who is the master. For now only `"dns"` (dns is the master, azure is the slave) is supported.
+
 - **dns** (object, required):  
   Contains the DNS-related configuration for the zone, which includes:
 
-  - **masters** (array of strings, required):  
-    A list of master DNS servers for the zone. This field must contain at least one entry.
+  - **servers** (array of strings, required):  
+    A list of DNS servers for the zone. This field must contain at least one entry.
 
   - **zone_transfer** (string, optional):  
     Specifies the type of zone transfer. It can be either `"ixfr"` (incremental zone transfer) or `"axfr"` (full zone transfer). The default value is `"ixfr"`.
@@ -87,7 +90,7 @@ This section provides a complete configuration example for a DNS zone named **co
     {
       "zone_name": "contoso.com",
       "dns": {
-        "masters": ["192.0.2.1"],
+        "servers": ["192.0.2.1"],
         "zone_transfer": "axfr",
         "polling_interval": 10
       },
@@ -101,8 +104,8 @@ This section provides a complete configuration example for a DNS zone named **co
   ],
   "azure_credentials": [
     {
-      "tenant": "12345678-1234-1234-1234-123456789abc",
-      "service_principal": "sp-12345678",
+      "tenant": "contoso.onmicrosoft.com",
+      "service_principal": "11111111-2222-4444-3333-555555555555",
       "password": "your-secret-password"
     }
   ]
