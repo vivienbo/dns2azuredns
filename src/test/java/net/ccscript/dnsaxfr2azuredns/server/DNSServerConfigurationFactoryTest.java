@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns.slaveserver;
+package net.ccscript.dnsaxfr2azuredns.server;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
