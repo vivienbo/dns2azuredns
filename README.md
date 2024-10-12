@@ -66,7 +66,7 @@ sequenceDiagram
     end
 ```
 
-## Running the DNSSlaveServerApp
+## Running the DNSServerApp
 
 1. Create a configuration file based on the [example.json](conf/example.json). For more information check [Configuration Documentation](conf/README.md)
 2. Start the server using `java -jar dnsaxfr2azuredns.jar -c conf/settings.json`
@@ -84,7 +84,7 @@ This project requires the following libraries:
 * [dnsjava](https://github.com/dnsjava/dnsjava)
 * [Azure SDK for Java](https://github.com/Azure/azure-sdk-for-java)
 
-For `DNSSlaveServerApp` command line arguments:
+For `DNSServerApp` command line arguments:
 * [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/)
 
 For JSON configuration processing:
