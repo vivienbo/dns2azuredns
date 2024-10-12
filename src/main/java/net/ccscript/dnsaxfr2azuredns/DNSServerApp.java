@@ -50,11 +50,8 @@ public final class DNSServerApp {
         try {
             cmdArguments = parser.parse(getCommandLineOptions(), args, false);
         } catch (MissingOptionException moe) {
-            throw new IllegalArgumentException("Use -h to get help.", moe);
-        }
-
-        if (!cmdArguments.hasOption("c")) {
-            throw new IllegalArgumentException("Configuration file is mandatory (-c config_file). Use -h to get help.");
+            throw new IllegalArgumentException(
+                "Configuration file is mandatory (-c config_file). Use -h to get help.", moe);
         }
 
         String configurationFileName = cmdArguments.getOptionValue("c");
