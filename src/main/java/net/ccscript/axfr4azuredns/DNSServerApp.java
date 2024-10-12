@@ -1,5 +1,8 @@
 package net.ccscript.axfr4azuredns;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -19,12 +22,14 @@ import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationExc
  */
 public final class DNSServerApp {
 
+    private static Logger logger = LogManager.getLogger();
+    private static ResourceBundle i18n =
+        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.i18n", Locale.getDefault());
+
     private static Option helpOption = Option.builder("h")
         .longOpt("help")
-        .desc("Prints this help message")
+        .desc(i18n.getString("dnsserverapp.help.message"))
         .build();
-
-    private static Logger logger = LogManager.getLogger();
 
     /**
      * Private constructor: this class only has one static public method: {@link #main(String[])}.
@@ -51,11 +56,11 @@ public final class DNSServerApp {
             cmdArguments = parser.parse(getCommandLineOptions(), args, false);
         } catch (MissingOptionException moe) {
             throw new IllegalArgumentException(
-                "Configuration file is mandatory (-c config_file). Use -h to get help.", moe);
+                i18n.getString("dnsserverapp.error.missingconfiguration"), moe);
         }
 
         String configurationFileName = cmdArguments.getOptionValue("c");
-        logger.info("Configuration file is in: {}", configurationFileName);
+        logger.info(i18n.getString("dnsserverapp.logger.configfilelocation"), configurationFileName);
 
         DNSServer dnsServer = new DNSServer(configurationFileName);
         dnsServer.start();
@@ -77,7 +82,7 @@ public final class DNSServerApp {
 
         if (cmdArguments.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("axfr4azuredns", getCommandLineOptions());
+            formatter.printHelp(i18n.getString("dnsserverapp.help.appname"), getCommandLineOptions());
             return true;
         }
 
@@ -98,7 +103,7 @@ public final class DNSServerApp {
             .argName("config_file")
             .hasArg()
             .required()
-            .desc("The JSON configuration file")
+            .desc(i18n.getString("dnsserverapp.config.message"))
             .build();
         clOptions.addOption(configurationFileOption);
 
