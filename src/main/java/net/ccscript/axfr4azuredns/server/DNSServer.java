@@ -11,7 +11,7 @@ import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationExc
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationFactory;
 
 /**
- * A DNS Slave Server.
+ * A DNS Server and all processing logic multithreading logic associated.
  */
 public class DNSServer {
 

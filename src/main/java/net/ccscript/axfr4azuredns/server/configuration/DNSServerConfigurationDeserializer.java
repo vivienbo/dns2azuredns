@@ -13,6 +13,7 @@ import com.google.gson.JsonParseException;
 
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.AzureDomain;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.DNSDomain;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.DNSSynchronizationMaster;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Server;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Zone;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.ZoneTransferType;
@@ -101,7 +102,12 @@ public class DNSServerConfigurationDeserializer implements
             JsonObject azureDnsObject = domainObject.get("azure").getAsJsonObject();
             AzureDomain azureDomain = deserializeAzureDomain(azureDnsObject, dnsConfiguration);
 
-            Zone domain = dnsConfiguration.new Zone(zoneName, dnsDomain, azureDomain);
+            DNSSynchronizationMaster master = DNSSynchronizationMaster.DNS;
+            if (domainObject.has("master")) {
+                master = DNSSynchronizationMaster.valueOf(domainObject.get("master").getAsString().toUpperCase());
+            }
+
+            Zone domain = dnsConfiguration.new Zone(zoneName, master, dnsDomain, azureDomain);
             dnsConfiguration.addZone(domain);
         }
     }

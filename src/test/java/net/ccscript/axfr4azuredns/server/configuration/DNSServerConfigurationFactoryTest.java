@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.AzureCredentials;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.AzureDomain;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.DNSDomain;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.DNSSynchronizationMaster;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Server;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Zone;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.ZoneTransferType;
@@ -134,7 +135,7 @@ public class DNSServerConfigurationFactoryTest {
 
         String json = "{"
             + "\"servers\":[{\"listen_on\":\"127.0.0.1\"}],"
-            + "\"zones\":[{\"zone_name\":\"sub.example.com\",\"master\": \"dns\","
+            + "\"zones\":[{\"zone_name\":\"sub.example.com\","
             + "\"dns\":{\"servers\":[\"192.168.100.1\","
             + "\"192.168.100.254\"]},"
             + "\"azure\":{\"zone_name\":\"example.com\",\"resourcegroup\":\"AMDProject_DNS_Global\","
@@ -154,6 +155,7 @@ public class DNSServerConfigurationFactoryTest {
         Zone testZone = configuration.getZoneByName("sub.example.com");
         assertEquals(testZone.getDnsDomainConfiguration().getPollingInterval(), TEST_ONE_POLLPERIOD);
         assertEquals(testZone.getDnsDomainConfiguration().getZoneTransfer(), TEST_ONE_TXMODE);
+        assertEquals(testZone.getMaster(), DNSSynchronizationMaster.DNS);
     }
 
     @Test
@@ -268,5 +270,24 @@ public class DNSServerConfigurationFactoryTest {
 
         DNSServerConfiguration config = DNSServerConfigurationFactory.createDNSServerConfiguration(json2);
         assertEquals(config.getZoneByName("example.com").getAzureDomain().getAzureZoneName(), "sub.example.com");
+    }
+
+    @Test
+    void testAzureMaster() throws FileNotFoundException,
+        IOException, DNSServerConfigurationException {
+
+        String json2 = "{"
+            + "\"servers\":[{\"listen_on\":\"127.0.0.1\",\"tcp_port\":53}],"
+            + "\"zones\":[{\"zone_name\":\"example.com\",\"master\": \"azure\","
+            + "\"dns\":{\"servers\":[\"192.168.100.1\","
+            + "\"192.168.100.254\"],\"zone_transfer\":\"ixfr\",\"polling_interval\":5},"
+            + "\"azure\":{\"zone_name\":\"sub.example.com\",\"resourcegroup\":\"AMDProject_DNS_Global\","
+            + "\"subscription\":\"55555555-6666-4444-7777-888888888888\","
+            + "\"service_principal\":\"00000000-1111-4444-2222-333333333333\"}}],"
+            + "\"azure_credentials\":[{\"tenant\":\"exampletenant.onmicrosoft.com\","
+            + "\"service_principal\":\"00000000-1111-4444-2222-333333333333\",\"password\":\"passw0rd\"}]}";
+
+        DNSServerConfiguration config = DNSServerConfigurationFactory.createDNSServerConfiguration(json2);
+        assertEquals(config.getZoneByName("example.com").getMaster(), DNSSynchronizationMaster.AZURE);
     }
 }

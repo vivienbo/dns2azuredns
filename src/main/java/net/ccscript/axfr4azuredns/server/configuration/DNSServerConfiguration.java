@@ -198,22 +198,33 @@ public final class DNSServerConfiguration {
     }
 
     /**
+     * The server which is used as master: DNS or AZURE.
+     */
+    public enum DNSSynchronizationMaster {
+        /**
+         * DNS is the master and Azure is the slave.
+         */
+        DNS,
+        /**
+         * Azure is the master and DNS is the slave.
+         * */
+        AZURE
+    }
+
+    /**
      * Domain name related Configuration.
      */
     public final class Zone {
         private String zoneName;
+        private DNSSynchronizationMaster master;
         private DNSDomain dnsDomainConfiguration;
         private AzureDomain azureDomain;
 
-        /**
-         * Creates a Zone object.
-         * @param zoneName the dns zone name.
-         * @param dnsDomain a {@link DNSDomain} containing non-Azure DNS Zone configuration.
-         * @param azureDomain
-         */
-        Zone(String zoneName, DNSDomain dnsDomain, AzureDomain azureDomain) throws DNSServerConfigurationException {
+        Zone(String zoneName, DNSSynchronizationMaster master, DNSDomain dnsDomain, AzureDomain azureDomain)
+            throws DNSServerConfigurationException {
             setZoneNameAndAzureDomain(zoneName, azureDomain);
             this.dnsDomainConfiguration = dnsDomain;
+            this.master = master;
         }
 
         /**
@@ -264,6 +275,10 @@ public final class DNSServerConfiguration {
          */
         public String getZoneName() {
             return this.zoneName;
+        }
+
+        public DNSSynchronizationMaster getMaster() {
+            return this.master;
         }
     }
 

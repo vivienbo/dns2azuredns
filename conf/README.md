@@ -25,7 +25,7 @@ The `zones` section defines an array of DNS zone configurations. Each zone confi
   The name of the DNS zone. This field is mandatory.
 
 - **master** (string, required):
-  Specifies the type of synchronization based on who is the master. For now only `"dns"` (dns is the master, azure is the slave) is supported.
+  Specifies the type of synchronization based on who is the master. For now only `"dns"` (dns is the master, azure is the slave) is supported however `azure` will be supported in the future.
 
 - **dns** (object, required):  
   Contains the DNS-related configuration for the zone, which includes:
@@ -38,6 +38,7 @@ The `zones` section defines an array of DNS zone configurations. Each zone confi
 
   - **polling_interval** (number, optional):  
     The interval in minutes for polling the master servers. It must be between `1` and `60` minutes, with a default value of `5`.
+    If `master` is set to `azure`, this value is not ignored.
 
 - **azure** (object, required):  
   Contains Azure-specific configuration for the zone, which includes:

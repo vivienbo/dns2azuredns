@@ -40,7 +40,7 @@
           },
           "master": {
             "type": "string",
-            "enum": ["dns"],
+            "enum": ["dns", "azure"],
             "default": "dns"
           },
           "dns": {
@@ -97,7 +97,6 @@
         },
         "required": [
           "zone_name",
-          "master",
           "dns",
           "azure"
         ]
