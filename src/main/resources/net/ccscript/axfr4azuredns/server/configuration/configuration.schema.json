@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "title": "dnsaxfr2azuredns configuration file format",
+  "title": "axfr4azuredns configuration file format",
   "properties": {
     "servers": {
       "type": "array",

@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns.server.configuration;
+package net.ccscript.axfr4azuredns.server.configuration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+
 import dev.harrel.jsonschema.Error;
 import dev.harrel.jsonschema.Validator;
 import dev.harrel.jsonschema.ValidatorFactory;
@@ -77,7 +78,8 @@ public final class DNSServerConfigurationFactory {
 
         logger.info("Loading JSON Schema");
 
-        InputStream schemaStream = DNSServerConfiguration.class.getResourceAsStream("/configuration.schema.json");
+        InputStream schemaStream = DNSServerConfiguration.class.getResourceAsStream(
+            "/net/ccscript/axfr4azuredns/server/configuration/configuration.schema.json");
         String schema = new String(schemaStream.readAllBytes(), StandardCharsets.UTF_8);
         schemaStream.close();
 

@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns.server.configuration;
+package net.ccscript.axfr4azuredns.server.configuration;
 
 /**
  * Used to report exceptions on the DNSSlaveServerConfiguration.

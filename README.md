@@ -1,5 +1,8 @@
-# dnsaxfr2azuredns
-`dnsaxfr2azuredns` is a reponse to [Azure DNS](https://learn.microsoft.com/en-us/azure/dns/dns-overview) lack of [AXFR/IXFR](https://learn.microsoft.com/en-us/azure/dns/dns-faq#does-azure-dns-support-zone-transfers--axfr-ixfr--) Zone transfer. This is a Java application that acts as a Slave DNS Server and synchronizes with Master DNS's, and then replicates modified data with Azure DNS.
+# axfr4azuredns
+`axfr4azuredns` is a reponse to [Azure DNS](https://learn.microsoft.com/en-us/azure/dns/dns-overview) lack of support for [AXFR/IXFR](https://learn.microsoft.com/en-us/azure/dns/dns-faq#does-azure-dns-support-zone-transfers--axfr-ixfr--) Zone transfer.
+This is a Java application that can act:
+* As a Slave DNS Server which synchronizes with Master DNS's, and then replicates modified data with Azure DNS.
+* Or as a Master DNS Server which synchronizes with Azure DNS, and then replicates modified data to a non-Azure, AXFR compatible DNS.
 
 # Disclaimer
 
@@ -22,7 +25,7 @@ Here is an example of workflow synchronizing one or more Master DNS Servers with
 ```mermaid
 sequenceDiagram
     participant EDNS as Existing DNS Server
-    participant D2AD as dnsaxfr2azuredns
+    participant D2AD as axfr4azuredns
     participant AzDNSCache as Local Azure DNS Cache
     participant AzAPI as Azure API
     participant AzDNS as Azure DNS
@@ -69,7 +72,7 @@ sequenceDiagram
 ## Running the DNSServerApp
 
 1. Create a configuration file based on the [example.json](conf/example.json). For more information check [Configuration Documentation](conf/README.md)
-2. Start the server using `java -jar dnsaxfr2azuredns.jar -c conf/settings.json`
+2. Start the server using `java -jar axfr4azuredns.jar -c conf/settings.json`
 
 # Contributing details
 

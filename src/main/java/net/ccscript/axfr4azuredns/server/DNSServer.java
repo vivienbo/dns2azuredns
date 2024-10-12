@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns.server;
+package net.ccscript.axfr4azuredns.server;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,9 +6,9 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfiguration;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfigurationException;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfigurationFactory;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationException;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationFactory;
 
 /**
  * A DNS Slave Server.
