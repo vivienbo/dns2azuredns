@@ -2,6 +2,8 @@ package net.ccscript.axfr4azuredns.server;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,26 +17,31 @@ import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationFac
  */
 public class DNSServer {
 
-    private Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
+    private static ResourceBundle i18n =
+        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.server.i18n",
+            Locale.getDefault());
+
     private DNSServerConfiguration configuration;
 
     /**
-     * Creates a {@link #DNSSlaveServer} based on a given configuration JSON.
+     * Creates a {@link DNSServer} based on a given configuration JSON.
      * @param configurationFileName The location of the configuration JSON.
      * @throws DNSServerConfigurationException In case configuration could not be read.
      */
     public DNSServer(String configurationFileName) throws DNSServerConfigurationException {
         try {
-            logger.info("DNS Server is loading configuration from file {}", configurationFileName);
+            logger.info(i18n.getString("server.logger.configurationlocation"), configurationFileName);
             configuration = DNSServerConfigurationFactory.createDNSServerConfigurationFromFile(
                 configurationFileName);
         } catch (FileNotFoundException e) {
-            throw new DNSServerConfigurationException("Configuration file could not be found", e);
+            throw new DNSServerConfigurationException(i18n.getString("server.exception.configfilenotfound"), e);
         } catch (IOException e) {
-            throw new DNSServerConfigurationException("Error reading schema or configuration", e);
+            throw new DNSServerConfigurationException(i18n.getString("server.exception.configerror"), e);
         } catch (DNSServerConfigurationException e) {
             throw e;
         }
+        addShutdownHook();
     }
 
     /**
@@ -43,6 +50,20 @@ public class DNSServer {
     public void start() {
         // TODO start Signal listener in case of termination
         // TODO start server listener thread(s)
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException ie) {
+        }
+    }
+
+    private void addShutdownHook() {
+        DNSServer thisServer = this;
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                logger.warn(i18n.getString("server.logger.shutdownhook"));
+                thisServer.stop();
+            }
+        });
     }
 
     public void stop() {

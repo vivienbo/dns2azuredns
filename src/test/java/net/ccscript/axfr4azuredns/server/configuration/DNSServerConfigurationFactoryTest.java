@@ -44,7 +44,6 @@ public class DNSServerConfigurationFactoryTest {
         DNSServerConfiguration testConfigOne =
             DNSServerConfigurationFactory.createDNSServerConfiguration(json);
 
-        //assertEquals(DNSSlaveServerConfigurationFactory.createDNSSlaveServerConfiguration(null), 1);
         assertEquals(testConfigOne.getServers().size(), 1);
         for (Server server : testConfigOne.getServers()) {
             assertEquals(server.getListenOn(), "127.0.0.1");

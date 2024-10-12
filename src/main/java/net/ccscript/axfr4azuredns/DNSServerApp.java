@@ -38,7 +38,7 @@ public final class DNSServerApp {
     }
 
     /**
-     * Starts the DNS Slave Server.
+     * Starts the DNS Server.
      * @param args The arguments of the program:
      *      [-h|-help]                  Print help message and discards the rest
      *      [-c|-config] config_file    The JSON configuration file. Mandatory to start the server.
