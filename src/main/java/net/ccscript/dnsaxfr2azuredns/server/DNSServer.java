@@ -26,7 +26,7 @@ public class DNSServer {
     public DNSServer(String configurationFileName) throws DNSServerConfigurationException {
         try {
             logger.info("DNS Server is loading configuration from file {}", configurationFileName);
-            configuration = DNSServerConfigurationFactory.createDNSSlaveServerConfigurationFromFile(
+            configuration = DNSServerConfigurationFactory.createDNSServerConfigurationFromFile(
                 configurationFileName);
         } catch (FileNotFoundException e) {
             throw new DNSServerConfigurationException("Configuration file could not be found", e);

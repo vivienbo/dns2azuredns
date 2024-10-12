@@ -26,24 +26,24 @@ public final class DNSServerConfigurationFactory {
     private DNSServerConfigurationFactory() {
     }
 
-    public static DNSServerConfiguration createDNSSlaveServerConfigurationFromFile(String configurationFilePath)
+    public static DNSServerConfiguration createDNSServerConfigurationFromFile(String configurationFilePath)
         throws FileNotFoundException, IOException, DNSServerConfigurationException {
 
         InputStream configurationStream = new FileInputStream(configurationFilePath);
         String configurationJsonString = new String(configurationStream.readAllBytes(), StandardCharsets.UTF_8);
         configurationStream.close();
 
-        return createDNSSlaveServerConfiguration(configurationJsonString);
+        return createDNSServerConfiguration(configurationJsonString);
     }
 
-    public static DNSServerConfiguration createDNSSlaveServerConfigurationFromStream(
+    public static DNSServerConfiguration createDNSServerConfigurationFromStream(
         InputStream configurationStream) throws FileNotFoundException, IOException,
         DNSServerConfigurationException {
 
         String configurationJsonString = new String(configurationStream.readAllBytes(), StandardCharsets.UTF_8);
         configurationStream.close();
 
-        return createDNSSlaveServerConfiguration(configurationJsonString);
+        return createDNSServerConfiguration(configurationJsonString);
     }
 
     /**
@@ -54,7 +54,7 @@ public final class DNSServerConfigurationFactory {
      * @throws IOException If the file or the schema could not be read.
      * @throws DNSServerConfigurationException If the configuration or schema are not compliant.
      */
-    public static DNSServerConfiguration createDNSSlaveServerConfiguration(String configurationJsonString)
+    public static DNSServerConfiguration createDNSServerConfiguration(String configurationJsonString)
         throws FileNotFoundException, IOException, DNSServerConfigurationException {
 
         logger.info("Checking the configuration against the JSON schema");
