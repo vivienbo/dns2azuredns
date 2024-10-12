@@ -97,11 +97,5 @@ For JSON configuration processing:
 
 # Todo List
 
-To get to the first version, we need:
-* [ ] Configuration object
-* [ ] Functional DNS Server to receive NOTIFY or send AXFR requests every (configurable) minutes
-* [ ] DNS Caching for IXFR transfers
-* [ ] Azure DNS Zone to dnsjava converter
-* [ ] DNS Caching for Azure DNS
-* [ ] Comparator between the DNS Caching and Azure DNS Zone
-* [ ] Updater for the Azure DNS Zone
+The Todo list is available in [Github milestones](https://github.com/vivienbo/axfr4azuredns/milestone).
+Don't hesitate to [report issues or feature requests](https://github.com/vivienbo/axfr4azuredns/issues)
