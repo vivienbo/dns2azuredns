@@ -1,11 +1,14 @@
 package net.ccscript.axfr4azuredns.server.configuration;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,6 +24,9 @@ import net.ccscript.axfr4azuredns.server.DNSServer;
  */
 public final class DNSServerConfiguration {
     private static Logger logger = LogManager.getLogger();
+    private static ResourceBundle i18n =
+        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.server.configuration.i18n",
+            Locale.getDefault());
 
     private Set<Server> servers;
     private Map<String, Zone> zones;
@@ -64,9 +70,12 @@ public final class DNSServerConfiguration {
     void addZone(Zone zone) throws DNSServerConfigurationException {
         String servicePrincipal = zone.getAzureDomain().getAzureServicePrincipal();
         if (null == getAzureCredential(servicePrincipal)) {
-            logger.error("Service Principal for Zone {} not found: {}", zone.getZoneName(), servicePrincipal);
-            throw new DNSServerConfigurationException("Service Principal not found: " + servicePrincipal
-                + ". Please add service principal before adding the zone.");
+            logger.error(i18n.getString("configuration.logger.zone.serviceprincipalerror"),
+                zone.getZoneName(), servicePrincipal
+            );
+            throw new DNSServerConfigurationException(MessageFormat.format(
+                i18n.getString("configuration.exception.zone.serviceprincipalerror"), servicePrincipal)
+            );
         }
         this.zones.put(zone.getZoneName(), zone);
     }
@@ -153,8 +162,10 @@ public final class DNSServerConfiguration {
             InetAddressValidator ipAddressValidator = InetAddressValidator.getInstance();
 
             if (!ipAddressValidator.isValid(listenOn)) {
-                logger.error("Listen on IP address invalid: {}", listenOn);
-                throw new DNSServerConfigurationException("Listen on IP address invalid: " + listenOn);
+                logger.error(i18n.getString("configuration.logger.server.listenonerror"), listenOn);
+                throw new DNSServerConfigurationException(
+                    MessageFormat.format(i18n.getString("configuration.exception.server.listenonerror"), listenOn)
+                );
             }
 
             this.listenOn = listenOn;
@@ -191,7 +202,9 @@ public final class DNSServerConfiguration {
          */
         public int getUdpPort() throws DNSServerConfigurationException {
             if (!isUdpEnabled()) {
-                throw new DNSServerConfigurationException("UDP is not enabled in the server configuration.");
+                throw new DNSServerConfigurationException(
+                    i18n.getString("configuration.exception.server.udpdisablederror")
+                );
             }
             return this.udpPort;
         }
@@ -241,12 +254,19 @@ public final class DNSServerConfiguration {
             String azureZoneName = newAzureDomain.getAzureZoneName();
             if (validator.isValid(azureZoneName)) {
                 if (!newZoneName.endsWith(azureZoneName) && !azureZoneName.endsWith(newZoneName)) {
-                    logger.error("DNS Zone isn't a subdomain of the Azure zone: {} vs {}", newZoneName, azureZoneName);
-                    throw new DNSServerConfigurationException("DNS Zone isn't a subdomain of the Azure zone");
+                    logger.error(i18n.getString("configuration.logger.zone.subdomainerror"),
+                        newZoneName, azureZoneName
+                    );
+                    throw new DNSServerConfigurationException(
+                        i18n.getString("configuration.exception.zone.subdomainerror")
+                    );
                 }
             } else {
-                logger.error("Azure Zone name is not valid: {}", azureZoneName);
-                throw new DNSServerConfigurationException("Azure Zone name is not valid");
+                logger.error(i18n.getString("configuration.logger.zone.invalidname"), azureZoneName);
+                throw new DNSServerConfigurationException(
+                    MessageFormat.format(i18n.getString("configuration.exception.zone.invalidname"),
+                        azureZoneName)
+                );
             }
 
             this.zoneName = newZoneName;
@@ -325,8 +345,12 @@ public final class DNSServerConfiguration {
 
             for (String ipAddress : dnsServersIPs) {
                 if (!ipAddressValidator.isValid(ipAddress)) {
-                    logger.error("Invalid dns IP address: {}", ipAddress);
-                    throw new DNSServerConfigurationException("Invalid dns IP address: " + ipAddress);
+                    logger.error(
+                        i18n.getString("configuration.logger.dnsdomain.invalidip"), ipAddress
+                    );
+                    throw new DNSServerConfigurationException(
+                        MessageFormat.format(i18n.getString("configuration.exception.dnsdomain.invalidip"), ipAddress)
+                    );
                 }
             }
 
@@ -456,8 +480,10 @@ public final class DNSServerConfiguration {
             try {
                 UUID.fromString(newServicePrincipal);
             } catch (IllegalArgumentException iae) {
-                logger.error("Service Principal is not a valid GUID/UUID: {}", servicePrincipal);
-                throw new DNSServerConfigurationException("Service Principal is not a valid GUID/UUID");
+                logger.error(i18n.getString("configuration.logger.azurecredentials.guiderror"), servicePrincipal);
+                throw new DNSServerConfigurationException(
+                    i18n.getString("configuration.exception.azurecredentials.guiderror")
+                );
             }
             this.servicePrincipal = newServicePrincipal;
         }

@@ -1,7 +1,7 @@
 package net.ccscript.axfr4azuredns.server.configuration;
 
 /**
- * Used to report exceptions on the DNSSlaveServerConfiguration.
+ * Used to report Exceptions on the DNSServerConfiguration.
  */
 public class DNSServerConfigurationException extends Exception {
 

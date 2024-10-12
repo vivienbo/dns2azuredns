@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +25,9 @@ import dev.harrel.jsonschema.providers.GsonNode;
 public final class DNSServerConfigurationFactory {
 
     private static Logger logger = LogManager.getLogger();
+    private static ResourceBundle i18n =
+        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.server.configuration.i18n",
+            Locale.getDefault());
 
     private DNSServerConfigurationFactory() {
     }
@@ -48,7 +53,7 @@ public final class DNSServerConfigurationFactory {
     }
 
     /**
-     * Checks and loads the DNSSlaveServerConfiguration from a JSON file.
+     * Checks and loads the DNSServerConfiguration from a JSON file.
      * @param configurationJsonString The json configuration, as a String.
      * @return The deserialized {@link DNSServerConfiguration}
      * @throws FileNotFoundException If the file was not found.
@@ -58,12 +63,13 @@ public final class DNSServerConfigurationFactory {
     public static DNSServerConfiguration createDNSServerConfiguration(String configurationJsonString)
         throws FileNotFoundException, IOException, DNSServerConfigurationException {
 
-        logger.info("Checking the configuration against the JSON schema");
+        logger.info(i18n.getString("factory.logger.checkjsonschema"));
         checkServerConfigurationFormat(configurationJsonString);
 
-        logger.info("Loading configuration from JSON file");
+        logger.info(i18n.getString("factory.logger.loadjson"));
         DNSServerConfiguration serverConfiguration = loadServerConfiguration(configurationJsonString);
 
+        logger.info(i18n.getString("factory.logger.loadjson.ok"));
         return serverConfiguration;
     }
 
@@ -76,7 +82,7 @@ public final class DNSServerConfigurationFactory {
     private static void checkServerConfigurationFormat(String configurationJsonString)
         throws IOException, DNSServerConfigurationException {
 
-        logger.info("Loading JSON Schema");
+        logger.info(i18n.getString("factory.logger.checkjsonschema.load"));
 
         InputStream schemaStream = DNSServerConfiguration.class.getResourceAsStream(
             "/net/ccscript/axfr4azuredns/server/configuration/configuration.schema.json");
@@ -88,18 +94,20 @@ public final class DNSServerConfigurationFactory {
 
         Validator.Result validationResult = validator.validate(schemaUri, configurationJsonString);
         if (validationResult.isValid()) {
-            logger.info("Configuration File is compliant with the schema.");
+            logger.info(i18n.getString("factory.logger.checkjsonschema.ok"));
         } else {
-            logger.warn("Configuration Errors [{}]", validationResult.getErrors().stream()
-                .map(Error::getError).collect(Collectors.joining(", ")));
-            throw new DNSServerConfigurationException("Configuration file is not conform to the schema");
+            logger.warn(i18n.getString("factory.logger.checkjsonschema.errors"),
+                validationResult.getErrors().stream().map(Error::getError).
+                    collect(Collectors.joining(", "))
+            );
+            throw new DNSServerConfigurationException(i18n.getString("factory.exception.schemaerror"));
         }
     }
 
     /**
      * Loads {@link DNSServerConfiguration} based on a file path as a string.
      * @param configurationFileName The file path as a String.
-     * @return the DNSSlaveServerConfiguration based on JSON content of the file.
+     * @return the {@link DNSServerConfiguration} based on JSON content of the file.
      * @throws FileNotFoundException If the file was not found.
      * @throws DNSServerConfigurationException If the configuration file is not in the correct format.
      */
@@ -116,7 +124,7 @@ public final class DNSServerConfigurationFactory {
 
             return configuration;
         } catch (JsonParseException jpe) {
-            throw new DNSServerConfigurationException("JSON content error", jpe);
+            throw new DNSServerConfigurationException(i18n.getString("factory.exception.jsonerror"), jpe);
         }
     }
 
