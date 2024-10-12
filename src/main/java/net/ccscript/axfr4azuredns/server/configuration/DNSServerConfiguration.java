@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns.server.configuration;
+package net.ccscript.axfr4azuredns.server.configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +14,7 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.ccscript.dnsaxfr2azuredns.server.DNSServer;
+import net.ccscript.axfr4azuredns.server.DNSServer;
 
 /**
  * The base configuration object for the {@link DNSServer}.

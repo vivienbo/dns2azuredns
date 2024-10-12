@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns;
+package net.ccscript.axfr4azuredns;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -11,8 +11,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.ccscript.dnsaxfr2azuredns.server.DNSServer;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfigurationException;
+import net.ccscript.axfr4azuredns.server.DNSServer;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationException;
 
 /**
  * Parses arguments and launches the DNS Server Application.
@@ -77,7 +77,7 @@ public final class DNSServerApp {
 
         if (cmdArguments.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("dnsaxfr2azuredns", getCommandLineOptions());
+            formatter.printHelp("axfr4azuredns", getCommandLineOptions());
             return true;
         }
 

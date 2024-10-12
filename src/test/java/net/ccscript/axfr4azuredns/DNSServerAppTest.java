@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns;
+package net.ccscript.axfr4azuredns;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -11,12 +11,12 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.junit.jupiter.api.Test;
 
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfigurationException;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationException;
 
 public class DNSServerAppTest {
 
     private static final String[] GET_HELP_REFERENCE = new String[]{
-        "usage: dnsaxfr2azuredns",
+        "usage: axfr4azuredns",
         " -c,--config <config_file>   The JSON configuration file",
         " -h,--help                   Prints this help message"
     };

@@ -1,4 +1,4 @@
-package net.ccscript.dnsaxfr2azuredns.server.configuration;
+package net.ccscript.axfr4azuredns.server.configuration;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -10,11 +10,12 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfiguration.AzureDomain;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfiguration.DNSDomain;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfiguration.Server;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfiguration.Zone;
-import net.ccscript.dnsaxfr2azuredns.server.configuration.DNSServerConfiguration.ZoneTransferType;
+
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.AzureDomain;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.DNSDomain;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Server;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Zone;
+import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.ZoneTransferType;
 
 /**
  * Deserializes a {@link DNSServerConfiguration} from JSON using GSON library.
