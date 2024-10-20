@@ -83,17 +83,18 @@ sequenceDiagram
 
 ## Project Dependencies
 
-This project requires the following libraries:
-* [dnsjava](https://github.com/dnsjava/dnsjava)
-* [Azure SDK for Java](https://github.com/Azure/azure-sdk-for-java)
+For testing and building:
+- **JUnit Jupiter API**, Version: `5.11.1`
+- **JUnit Jupiter Engine**, Version: `5.11.1`
 
-For `DNSServerApp` command line arguments:
-* [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/)
-
-For JSON configuration processing:
-* [dev.harrel's json-schema](https://github.com/harrel56/json-schema)
-* [Google GSON](https://github.com/google/gson)
-* [Apache Commons Validator](https://commons.apache.org/proper/commons-validator/)
+For running:
+- **Apache Commons CLI**, Version: `1.9.0`
+- **Apache Commons Validator**, Version: `1.9.0`
+- **Dev Harrel JSON Schema**, Version: `1.7.1`
+- **Google Gson**, Version: `2.11.0`
+- **Log4j2 Core**, Version: `2.24.0`
+- **Jgonian's Common IP Math**, Version: `1.32`
+- **Apache Mina**, Version `2.2.3`
 
 # Todo List
 

@@ -2,8 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ccscript.axfr4azuredns</groupId>
   <artifactId>axfr4azuredns</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>${revision}</version>
   <properties>
+    <revision>0.1.0-SNAPSHOT</revision>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,6 +21,8 @@
     <apache-log4j.version>2.24.0</apache-log4j.version>
     <dev-harrel-json-schema.version>1.7.1</dev-harrel-json-schema.version>
     <google-gson.version>2.11.0</google-gson.version>
+    <jgonian-ip-math.version>1.32</jgonian-ip-math.version>
+    <apache-mina.version>2.2.3</apache-mina.version>
     <!-- JaCoCo thresholds. Increase gradually as you add tests. -->
     <jacoco.unit-tests.limit.instruction-ratio>0%</jacoco.unit-tests.limit.instruction-ratio>
     <jacoco.unit-tests.limit.branch-ratio>0%</jacoco.unit-tests.limit.branch-ratio>
@@ -68,6 +71,18 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${apache-log4j.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.github.jgonian/commons-ip-math -->
+    <dependency>
+        <groupId>com.github.jgonian</groupId>
+        <artifactId>commons-ip-math</artifactId>
+        <version>${jgonian-ip-math.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.mina/mina-core -->
+    <dependency>
+        <groupId>org.apache.mina</groupId>
+        <artifactId>mina-core</artifactId>
+        <version>${apache-mina.version}</version>
     </dependency>
   </dependencies>
   <build>
