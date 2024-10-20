@@ -3,24 +3,25 @@ package net.ccscript.axfr4azuredns.server;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.cal10n.LocLogger;
+import org.slf4j.cal10n.LocLoggerFactory;
 
+import net.ccscript.axfr4azuredns.DNSServerApp;
+import net.ccscript.axfr4azuredns.i18n.ServerText;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationException;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationFactory;
+
+import ch.qos.cal10n.MessageConveyor;
 
 /**
  * A DNS Server and all processing logic multithreading logic associated.
  */
 public class DNSServer {
 
-    private static Logger logger = LogManager.getLogger();
-    private static ResourceBundle i18n =
-        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.server.i18n",
-            Locale.getDefault());
+    private static MessageConveyor i18n = new MessageConveyor(Locale.ENGLISH);
+    private static LocLogger logger = new LocLoggerFactory(i18n).getLocLogger(DNSServerApp.class);
 
     private DNSServerConfiguration configuration;
 
@@ -31,15 +32,17 @@ public class DNSServer {
      */
     public DNSServer(String configurationFileName) throws DNSServerConfigurationException {
         try {
-            logger.info(i18n.getString("server.logger.configurationlocation"), configurationFileName);
+            logger.info(ServerText.SERVER_LOGGER_CONFIGURATIONLOCATION, configurationFileName);
             configuration = DNSServerConfigurationFactory.createDNSServerConfigurationFromFile(
                 configurationFileName);
         } catch (FileNotFoundException e) {
-            throw new DNSServerConfigurationException(i18n.getString("server.exception.configfilenotfound"), e);
+            throw new DNSServerConfigurationException(
+                i18n.getMessage(ServerText.SERVER_EXCEPTION_CONFIGFILENOTFOUND), e
+            );
         } catch (IOException e) {
-            throw new DNSServerConfigurationException(i18n.getString("server.exception.configerror"), e);
+            throw new DNSServerConfigurationException(i18n.getMessage(ServerText.SERVER_EXCEPTION_CONFIGERROR), e);
         } catch (DNSServerConfigurationException e) {
-            throw e;
+            throw new DNSServerConfigurationException(i18n.getMessage(ServerText.SERVER_EXCEPTION_CONFIGERROR), e);
         }
         addShutdownHook();
     }
@@ -60,10 +63,12 @@ public class DNSServer {
         DNSServer thisServer = this;
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
-                logger.warn(i18n.getString("server.logger.shutdownhook"));
+                logger.warn(ServerText.SERVER_LOGGER_SHUTDOWNHOOK_TRIGGERED);
                 thisServer.stop();
+                System.out.println(i18n.getMessage(ServerText.SERVER_LOGGER_STOP));
             }
         });
+        logger.info(ServerText.SERVER_LOGGER_SHUTDOWNHOOK_ADDED);
     }
 
     public void stop() {

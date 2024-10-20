@@ -92,9 +92,14 @@ For running:
 - **Apache Commons Validator**, Version: `1.9.0`
 - **Dev Harrel JSON Schema**, Version: `1.7.1`
 - **Google Gson**, Version: `2.11.0`
-- **Log4j2 Core**, Version: `2.24.0`
 - **Jgonian's Common IP Math**, Version: `1.32`
 - **Apache Mina**, Version `2.2.3`
+- **SL4J API**, Version `2.0.16`
+- **Cal10n** for localization, Version `0.8.1`
+
+For logging:
+- **Log4j2 Core**, Version: `2.24.0`
+- **Log4J2 for SLF4J2**, Version `2.24.0`
 
 # Todo List
 

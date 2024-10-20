@@ -1,7 +1,6 @@
 package net.ccscript.axfr4azuredns;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -11,24 +10,26 @@ import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.cal10n.LocLogger;
+import org.slf4j.cal10n.LocLoggerFactory;
 
+import net.ccscript.axfr4azuredns.i18n.Axfr4AzureDnsText;
 import net.ccscript.axfr4azuredns.server.DNSServer;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfigurationException;
+
+import ch.qos.cal10n.MessageConveyor;
 
 /**
  * Parses arguments and launches the DNS Server Application.
  */
 public final class DNSServerApp {
 
-    private static Logger logger = LogManager.getLogger();
-    private static ResourceBundle i18n =
-        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.i18n", Locale.getDefault());
+    private static MessageConveyor i18n = new MessageConveyor(Locale.ENGLISH);
+    private static LocLogger logger = new LocLoggerFactory(i18n).getLocLogger(DNSServerApp.class);
 
     private static Option helpOption = Option.builder("h")
         .longOpt("help")
-        .desc(i18n.getString("dnsserverapp.help.message"))
+        .desc(i18n.getMessage(Axfr4AzureDnsText.APP_HELP_MESSAGE))
         .build();
 
     /**
@@ -56,11 +57,11 @@ public final class DNSServerApp {
             cmdArguments = parser.parse(getCommandLineOptions(), args, false);
         } catch (MissingOptionException moe) {
             throw new IllegalArgumentException(
-                i18n.getString("dnsserverapp.error.missingconfiguration"), moe);
+                i18n.getMessage(Axfr4AzureDnsText.APP_ERROR_MISSING_CONFIG), moe);
         }
 
         String configurationFileName = cmdArguments.getOptionValue("c");
-        logger.info(i18n.getString("dnsserverapp.logger.configfilelocation"), configurationFileName);
+        logger.info(Axfr4AzureDnsText.APP_LOGGER_CONFIG_LOCATION, configurationFileName);
 
         DNSServer dnsServer = new DNSServer(configurationFileName);
         dnsServer.start();
@@ -82,7 +83,7 @@ public final class DNSServerApp {
 
         if (cmdArguments.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp(i18n.getString("dnsserverapp.help.appname"), getCommandLineOptions());
+            formatter.printHelp(i18n.getMessage(Axfr4AzureDnsText.APP_HELP_APPNAME), getCommandLineOptions());
             return true;
         }
 
@@ -103,7 +104,7 @@ public final class DNSServerApp {
             .argName("config_file")
             .hasArg()
             .required()
-            .desc(i18n.getString("dnsserverapp.config.message"))
+            .desc(i18n.getMessage(Axfr4AzureDnsText.APP_CONFIG_MSG))
             .build();
         clOptions.addOption(configurationFileOption);
 

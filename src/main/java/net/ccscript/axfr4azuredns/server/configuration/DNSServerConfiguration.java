@@ -1,6 +1,5 @@
 package net.ccscript.axfr4azuredns.server.configuration;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,29 +7,34 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.validator.routines.DomainValidator;
 import org.apache.commons.validator.routines.InetAddressValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.cal10n.LocLogger;
+import org.slf4j.cal10n.LocLoggerFactory;
 
+import net.ccscript.axfr4azuredns.DNSServerApp;
+import net.ccscript.axfr4azuredns.i18n.ConfigurationText;
 import net.ccscript.axfr4azuredns.server.DNSServer;
+import net.ccscript.axfr4azuredns.server.security.AllowAllDNSServerAccessRightManager;
+import net.ccscript.axfr4azuredns.server.security.DNSServerAccessRightManager;
+
+import ch.qos.cal10n.MessageConveyor;
 
 /**
  * The base configuration object for the {@link DNSServer}.
  */
 public final class DNSServerConfiguration {
-    private static Logger logger = LogManager.getLogger();
-    private static ResourceBundle i18n =
-        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.server.configuration.i18n",
-            Locale.getDefault());
+
+    private static MessageConveyor i18n = new MessageConveyor(Locale.ENGLISH);
+    private static LocLogger logger = new LocLoggerFactory(i18n).getLocLogger(DNSServerApp.class);
 
     private Set<Server> servers;
     private Map<String, Zone> zones;
     private Map<String, AzureCredentials> azureCredentials;
+    private Options options;
 
     /**
      * Initialize the Sets and Collections used for Server Configuration.
@@ -40,6 +44,7 @@ public final class DNSServerConfiguration {
         this.servers = new HashSet<Server>();
         this.zones = new HashMap<String, Zone>();
         this.azureCredentials = new HashMap<String, AzureCredentials>();
+        this.options = new Options();
     }
 
     /**
@@ -70,11 +75,11 @@ public final class DNSServerConfiguration {
     void addZone(Zone zone) throws DNSServerConfigurationException {
         String servicePrincipal = zone.getAzureDomain().getAzureServicePrincipal();
         if (null == getAzureCredential(servicePrincipal)) {
-            logger.error(i18n.getString("configuration.logger.zone.serviceprincipalerror"),
+            logger.error(ConfigurationText.CONF_ZONE_SERVICEPRINCIPALERROR_LOG,
                 zone.getZoneName(), servicePrincipal
             );
-            throw new DNSServerConfigurationException(MessageFormat.format(
-                i18n.getString("configuration.exception.zone.serviceprincipalerror"), servicePrincipal)
+            throw new DNSServerConfigurationException(
+                i18n.getMessage(ConfigurationText.CONF_ZONE_SERVICEPRINCIPALERROR_EXCEPTION, servicePrincipal)
             );
         }
         this.zones.put(zone.getZoneName(), zone);
@@ -122,6 +127,21 @@ public final class DNSServerConfiguration {
         return this.azureCredentials.get(servicePrincipal);
     }
 
+    public Options getOptions() {
+        return this.options;
+    }
+
+    public final class Options {
+
+        private DNSServerAccessRightManager accessRightManager =
+            new AllowAllDNSServerAccessRightManager();
+
+        public DNSServerAccessRightManager getAccessRightManager() {
+            return accessRightManager;
+        }
+
+    }
+
     /**
      * Server Configuration Object.
      */
@@ -162,9 +182,9 @@ public final class DNSServerConfiguration {
             InetAddressValidator ipAddressValidator = InetAddressValidator.getInstance();
 
             if (!ipAddressValidator.isValid(listenOn)) {
-                logger.error(i18n.getString("configuration.logger.server.listenonerror"), listenOn);
+                logger.error(ConfigurationText.CONF_SERVER_LISTENONERROR, listenOn);
                 throw new DNSServerConfigurationException(
-                    MessageFormat.format(i18n.getString("configuration.exception.server.listenonerror"), listenOn)
+                    i18n.getMessage(ConfigurationText.CONF_SERVER_LISTENONERROR, listenOn)
                 );
             }
 
@@ -203,7 +223,7 @@ public final class DNSServerConfiguration {
         public int getUdpPort() throws DNSServerConfigurationException {
             if (!isUdpEnabled()) {
                 throw new DNSServerConfigurationException(
-                    i18n.getString("configuration.exception.server.udpdisablederror")
+                    i18n.getMessage(ConfigurationText.CONF_SERVER_UDPDISABLEDERROR)
                 );
             }
             return this.udpPort;
@@ -254,18 +274,17 @@ public final class DNSServerConfiguration {
             String azureZoneName = newAzureDomain.getAzureZoneName();
             if (validator.isValid(azureZoneName)) {
                 if (!newZoneName.endsWith(azureZoneName) && !azureZoneName.endsWith(newZoneName)) {
-                    logger.error(i18n.getString("configuration.logger.zone.subdomainerror"),
+                    logger.error(ConfigurationText.CONF_ZONE_SUBDOMAINERROR,
                         newZoneName, azureZoneName
                     );
                     throw new DNSServerConfigurationException(
-                        i18n.getString("configuration.exception.zone.subdomainerror")
+                        i18n.getMessage(ConfigurationText.CONF_ZONE_SUBDOMAINERROR)
                     );
                 }
             } else {
-                logger.error(i18n.getString("configuration.logger.zone.invalidname"), azureZoneName);
+                logger.error(ConfigurationText.CONF_ZONE_INVALIDNAME, azureZoneName);
                 throw new DNSServerConfigurationException(
-                    MessageFormat.format(i18n.getString("configuration.exception.zone.invalidname"),
-                        azureZoneName)
+                    i18n.getMessage(ConfigurationText.CONF_ZONE_INVALIDNAME, azureZoneName)
                 );
             }
 
@@ -345,11 +364,9 @@ public final class DNSServerConfiguration {
 
             for (String ipAddress : dnsServersIPs) {
                 if (!ipAddressValidator.isValid(ipAddress)) {
-                    logger.error(
-                        i18n.getString("configuration.logger.dnsdomain.invalidip"), ipAddress
-                    );
+                    logger.error(ConfigurationText.CONF_DNSDOMAIN_INVALIDIP, ipAddress);
                     throw new DNSServerConfigurationException(
-                        MessageFormat.format(i18n.getString("configuration.exception.dnsdomain.invalidip"), ipAddress)
+                        i18n.getMessage(ConfigurationText.CONF_DNSDOMAIN_INVALIDIP, ipAddress)
                     );
                 }
             }
@@ -480,9 +497,9 @@ public final class DNSServerConfiguration {
             try {
                 UUID.fromString(newServicePrincipal);
             } catch (IllegalArgumentException iae) {
-                logger.error(i18n.getString("configuration.logger.azurecredentials.guiderror"), servicePrincipal);
+                logger.error(ConfigurationText.CONF_AZURECREDENTIALS_GUIDERROR, servicePrincipal);
                 throw new DNSServerConfigurationException(
-                    i18n.getString("configuration.exception.azurecredentials.guiderror")
+                    i18n.getMessage(ConfigurationText.CONF_AZURECREDENTIALS_GUIDERROR, servicePrincipal)
                 );
             }
             this.servicePrincipal = newServicePrincipal;

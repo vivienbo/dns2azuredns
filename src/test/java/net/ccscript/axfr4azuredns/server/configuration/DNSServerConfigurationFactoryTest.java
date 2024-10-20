@@ -289,4 +289,23 @@ public class DNSServerConfigurationFactoryTest {
         DNSServerConfiguration config = DNSServerConfigurationFactory.createDNSServerConfiguration(json2);
         assertEquals(config.getZoneByName("example.com").getMaster(), DNSSynchronizationMaster.AZURE);
     }
+
+    @Test
+    void testOptionsSecurityManager() throws FileNotFoundException,
+        IOException, DNSServerConfigurationException {
+
+        String json2 = "{"
+            + "\"servers\":[{\"listen_on\":\"127.0.0.1\",\"tcp_port\":53}],"
+            + "\"zones\":[{\"zone_name\":\"example.com\",\"master\": \"azure\","
+            + "\"dns\":{\"servers\":[\"192.168.100.1\","
+            + "\"192.168.100.254\"],\"zone_transfer\":\"ixfr\",\"polling_interval\":5},"
+            + "\"azure\":{\"zone_name\":\"sub.example.com\",\"resourcegroup\":\"AMDProject_DNS_Global\","
+            + "\"subscription\":\"55555555-6666-4444-7777-888888888888\","
+            + "\"service_principal\":\"00000000-1111-4444-2222-333333333333\"}}],"
+            + "\"azure_credentials\":[{\"tenant\":\"exampletenant.onmicrosoft.com\","
+            + "\"service_principal\":\"00000000-1111-4444-2222-333333333333\",\"password\":\"passw0rd\"}]}";
+
+        DNSServerConfiguration config = DNSServerConfigurationFactory.createDNSServerConfiguration(json2);
+
+    }
 }

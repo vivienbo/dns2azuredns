@@ -7,16 +7,19 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.cal10n.LocLogger;
+import org.slf4j.cal10n.LocLoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
+import net.ccscript.axfr4azuredns.DNSServerApp;
+import net.ccscript.axfr4azuredns.i18n.ConfigurationText;
+
+import ch.qos.cal10n.MessageConveyor;
 import dev.harrel.jsonschema.Error;
 import dev.harrel.jsonschema.Validator;
 import dev.harrel.jsonschema.ValidatorFactory;
@@ -24,10 +27,8 @@ import dev.harrel.jsonschema.providers.GsonNode;
 
 public final class DNSServerConfigurationFactory {
 
-    private static Logger logger = LogManager.getLogger();
-    private static ResourceBundle i18n =
-        ResourceBundle.getBundle("net.ccscript.axfr4azuredns.server.configuration.i18n",
-            Locale.getDefault());
+    private static MessageConveyor i18n = new MessageConveyor(Locale.ENGLISH);
+    private static LocLogger logger = new LocLoggerFactory(i18n).getLocLogger(DNSServerApp.class);
 
     private DNSServerConfigurationFactory() {
     }
@@ -63,13 +64,13 @@ public final class DNSServerConfigurationFactory {
     public static DNSServerConfiguration createDNSServerConfiguration(String configurationJsonString)
         throws FileNotFoundException, IOException, DNSServerConfigurationException {
 
-        logger.info(i18n.getString("factory.logger.checkjsonschema"));
+        logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_LOG);
         checkServerConfigurationFormat(configurationJsonString);
 
-        logger.info(i18n.getString("factory.logger.loadjson"));
+        logger.info(ConfigurationText.FACTORY_LOADJSON_LOG);
         DNSServerConfiguration serverConfiguration = loadServerConfiguration(configurationJsonString);
 
-        logger.info(i18n.getString("factory.logger.loadjson.ok"));
+        logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_OK_LOG);
         return serverConfiguration;
     }
 
@@ -82,7 +83,7 @@ public final class DNSServerConfigurationFactory {
     private static void checkServerConfigurationFormat(String configurationJsonString)
         throws IOException, DNSServerConfigurationException {
 
-        logger.info(i18n.getString("factory.logger.checkjsonschema.load"));
+        logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_LOAD_LOG);
 
         InputStream schemaStream = DNSServerConfiguration.class.getResourceAsStream(
             "/net/ccscript/axfr4azuredns/server/configuration/configuration.schema.json");
@@ -94,13 +95,13 @@ public final class DNSServerConfigurationFactory {
 
         Validator.Result validationResult = validator.validate(schemaUri, configurationJsonString);
         if (validationResult.isValid()) {
-            logger.info(i18n.getString("factory.logger.checkjsonschema.ok"));
+            logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_OK_LOG);
         } else {
-            logger.warn(i18n.getString("factory.logger.checkjsonschema.errors"),
+            logger.error(ConfigurationText.FACTORY_CHECKJSONSCHEMA_ERRORS_LOG,
                 validationResult.getErrors().stream().map(Error::getError).
                     collect(Collectors.joining(", "))
             );
-            throw new DNSServerConfigurationException(i18n.getString("factory.exception.schemaerror"));
+            throw new DNSServerConfigurationException(i18n.getMessage(ConfigurationText.FACTORY_SCHEMAERROR_EXCEPTION));
         }
     }
 
@@ -124,7 +125,8 @@ public final class DNSServerConfigurationFactory {
 
             return configuration;
         } catch (JsonParseException jpe) {
-            throw new DNSServerConfigurationException(i18n.getString("factory.exception.jsonerror"), jpe);
+            throw new DNSServerConfigurationException(i18n.getMessage(
+                ConfigurationText.FACTORY_JSONERROR_EXCEPTION), jpe);
         }
     }
 
