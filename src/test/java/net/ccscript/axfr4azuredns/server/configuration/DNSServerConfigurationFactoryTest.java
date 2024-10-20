@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,12 +20,16 @@ import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.DN
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Server;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.Zone;
 import net.ccscript.axfr4azuredns.server.configuration.DNSServerConfiguration.ZoneTransferType;
+import net.ccscript.axfr4azuredns.server.security.AllowAllDNSServerAccessRightManager;
+import net.ccscript.axfr4azuredns.server.security.DNSAccessRight;
+import net.ccscript.axfr4azuredns.server.security.DNSAccessRightSet;
 
 public class DNSServerConfigurationFactoryTest {
 
     private static final int TEST_ONE_PORT = 53;
     private static final int TEST_ONE_POLLPERIOD = 5;
     private static final ZoneTransferType TEST_ONE_TXMODE = ZoneTransferType.IXFR;
+    private static final byte[] LOCAL_HOST_BYTES = new byte[]{127, 0, 0, 1};
 
     @Test
     void testFullValidConfigurationServersContents() throws FileNotFoundException,
@@ -307,5 +312,35 @@ public class DNSServerConfigurationFactoryTest {
 
         DNSServerConfiguration config = DNSServerConfigurationFactory.createDNSServerConfiguration(json2);
 
+        InetAddress localhost = InetAddress.getByAddress(LOCAL_HOST_BYTES);
+
+        // If the assertion is false, it's likely the unit test has to be upgraded
+        assertEquals(config.getOptions().getAccessRightManager().getClass(), AllowAllDNSServerAccessRightManager.class);
+
+        assertTrue(config.getOptions().getAccessRightManager().isAllowed(localhost));
+        assertTrue(config.getOptions().getAccessRightManager().getAccessRightSet(
+            localhost, "example.com").canQueryDomainNameTransfer());
+        assertTrue(config.getOptions().getAccessRightManager().getAccessRightSet(
+            localhost, "example.com").canQueryDomainName());
+
+        DNSAccessRightSet rightsSet = config.getOptions().getAccessRightManager().getAccessRightSet(
+            localhost, "example.com");
+        DNSAccessRightSet newRights = new DNSAccessRightSet();
+        newRights.addRight(DNSAccessRight.DENY);
+        rightsSet.addRights(newRights);
+        assertFalse(rightsSet.canQueryDomainNameTransfer());
+        assertFalse(rightsSet.canQueryDomainName());
+
+        rightsSet.removeRight(DNSAccessRight.DENY);
+        assertTrue(rightsSet.canQueryDomainNameTransfer());
+        assertTrue(rightsSet.canQueryDomainName());
+
+        DNSAccessRightSet emptyRights = new DNSAccessRightSet();
+        assertFalse(emptyRights.canQueryDomainNameTransfer());
+        assertFalse(emptyRights.canQueryDomainName());
+
+        DNSAccessRightSet combinedSet = DNSAccessRightSet.combineDnsAccessRightSet(rightsSet, newRights);
+        assertFalse(combinedSet.canQueryDomainName());
+        assertFalse(combinedSet.canQueryDomainNameTransfer());
     }
 }

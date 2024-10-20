@@ -103,5 +103,6 @@ For logging:
 
 # Todo List
 
-The Todo list is available in [Github milestones](https://github.com/vivienbo/axfr4azuredns/milestone).
-Don't hesitate to [report issues or feature requests](https://github.com/vivienbo/axfr4azuredns/issues)
+The Todo list is available in [Github milestones](https://github.com/vivienbo/axfr4azuredns/milestones).
+Don't hesitate to [report issues or feature requests](https://github.com/vivienbo/axfr4azuredns/issues).
+And of course don't hesitate to contribute if you want to join.
