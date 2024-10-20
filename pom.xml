@@ -246,6 +246,13 @@
       </plugin>
     </plugins>
   </build>
+  <distributionManagement>
+   <repository>
+     <id>github</id>
+     <name>GitHub axfr4azuredns Apache Maven Packages</name>
+     <url>https://maven.pkg.github.com/vivienbo/axfr4azuredns</url>
+   </repository>
+  </distributionManagement>
   <reporting>
     <plugins>
       <plugin>
