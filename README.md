@@ -100,6 +100,8 @@ For running:
 For logging:
 - **Log4j2 Core**, Version: `2.24.0`
 - **Log4J2 for SLF4J2**, Version `2.24.0`
+- **SLF4J API**, Version `2.0.16`
+- **SLF4J Extensions**, Version `2.0.16`
 
 # Todo List
 
