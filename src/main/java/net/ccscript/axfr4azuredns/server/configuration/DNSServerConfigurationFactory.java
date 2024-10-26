@@ -64,13 +64,13 @@ public final class DNSServerConfigurationFactory {
     public static DNSServerConfiguration createDNSServerConfiguration(String configurationJsonString)
         throws FileNotFoundException, IOException, DNSServerConfigurationException {
 
-        logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_LOG);
+        logger.debug(ConfigurationText.FACTORY_CHECKJSONSCHEMA_LOG);
         checkServerConfigurationFormat(configurationJsonString);
 
-        logger.info(ConfigurationText.FACTORY_LOADJSON_LOG);
+        logger.debug(ConfigurationText.FACTORY_LOADJSON_LOG);
         DNSServerConfiguration serverConfiguration = loadServerConfiguration(configurationJsonString);
 
-        logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_OK_LOG);
+        logger.info(ConfigurationText.FACTORY_LOADJSON_OK_LOG);
         return serverConfiguration;
     }
 
@@ -83,7 +83,7 @@ public final class DNSServerConfigurationFactory {
     private static void checkServerConfigurationFormat(String configurationJsonString)
         throws IOException, DNSServerConfigurationException {
 
-        logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_LOAD_LOG);
+        logger.debug(ConfigurationText.FACTORY_CHECKJSONSCHEMA_LOAD_LOG);
 
         InputStream schemaStream = DNSServerConfiguration.class.getResourceAsStream(
             "/net/ccscript/axfr4azuredns/server/configuration/configuration.schema.json");
@@ -95,7 +95,7 @@ public final class DNSServerConfigurationFactory {
 
         Validator.Result validationResult = validator.validate(schemaUri, configurationJsonString);
         if (validationResult.isValid()) {
-            logger.info(ConfigurationText.FACTORY_CHECKJSONSCHEMA_OK_LOG);
+            logger.debug(ConfigurationText.FACTORY_CHECKJSONSCHEMA_OK_LOG);
         } else {
             logger.error(ConfigurationText.FACTORY_CHECKJSONSCHEMA_ERRORS_LOG,
                 validationResult.getErrors().stream().map(Error::getError).

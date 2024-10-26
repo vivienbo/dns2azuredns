@@ -315,15 +315,17 @@ public class DNSServerConfigurationFactoryTest {
         InetAddress localhost = InetAddress.getByAddress(LOCAL_HOST_BYTES);
 
         // If the assertion is false, it's likely the unit test has to be upgraded
-        assertEquals(config.getOptions().getAccessRightManager().getClass(), AllowAllDNSServerAccessRightManager.class);
+        Server server = config.getServers().iterator().next();
 
-        assertTrue(config.getOptions().getAccessRightManager().isAllowed(localhost));
-        assertTrue(config.getOptions().getAccessRightManager().getAccessRightSet(
+        assertEquals(server.getAccessRightManager().getClass(), AllowAllDNSServerAccessRightManager.class);
+
+        assertTrue(server.getAccessRightManager().isAllowed(localhost));
+        assertTrue(server.getAccessRightManager().getAccessRightSet(
             localhost, "example.com").canQueryDomainNameTransfer());
-        assertTrue(config.getOptions().getAccessRightManager().getAccessRightSet(
+        assertTrue(server.getAccessRightManager().getAccessRightSet(
             localhost, "example.com").canQueryDomainName());
 
-        DNSAccessRightSet rightsSet = config.getOptions().getAccessRightManager().getAccessRightSet(
+        DNSAccessRightSet rightsSet = server.getAccessRightManager().getAccessRightSet(
             localhost, "example.com");
         DNSAccessRightSet newRights = new DNSAccessRightSet();
         newRights.addRight(DNSAccessRight.DENY);

@@ -133,11 +133,15 @@ public final class DNSServerConfiguration {
 
     public final class Options {
 
-        private DNSServerAccessRightManager accessRightManager =
-            new AllowAllDNSServerAccessRightManager();
+        private Set<String> dnsForwarders = new HashSet<String>();
 
-        public DNSServerAccessRightManager getAccessRightManager() {
-            return accessRightManager;
+        Options() {
+            dnsForwarders.add("1.1.1.1");
+            dnsForwarders.add("1.0.0.1");
+        }
+
+        public Set<String> getDNSForwarders() {
+            return Collections.unmodifiableSet(dnsForwarders);
         }
 
     }
@@ -158,6 +162,10 @@ public final class DNSServerConfiguration {
         private String listenOn;
         private int tcpPort;
         private int udpPort;
+
+        // TODO: Allow to configure the DNSServerAccessRightManager using ACL's
+        private DNSServerAccessRightManager accessRightManager =
+            new AllowAllDNSServerAccessRightManager();
 
         /**
          * Creates a Server object.
@@ -227,6 +235,14 @@ public final class DNSServerConfiguration {
                 );
             }
             return this.udpPort;
+        }
+
+        /**
+         * Gets the access right manager managing access for this server.
+         * @return the {@link DNSServerAccessRightManager} that manages access to this server.
+         */
+        public DNSServerAccessRightManager getAccessRightManager() {
+            return accessRightManager;
         }
     }
 

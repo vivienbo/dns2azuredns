@@ -61,7 +61,7 @@ public final class DNSServerApp {
         }
 
         String configurationFileName = cmdArguments.getOptionValue("c");
-        logger.info(Axfr4AzureDnsText.APP_LOGGER_CONFIG_LOCATION, configurationFileName);
+        logger.debug(Axfr4AzureDnsText.APP_LOGGER_CONFIG_LOCATION, configurationFileName);
 
         DNSServer dnsServer = new DNSServer(configurationFileName);
         dnsServer.start();
